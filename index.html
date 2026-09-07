@@ -38,6 +38,20 @@
   }catch(e){ /* keep the static data: URI manifest above as fallback */ }
 })();
 </script>
+
+<!-- Offline cache + auto-update: registers ./sw.js (a real, separately-hosted file,
+     next to index.html) so the app works fully offline from its last-cached version,
+     and automatically re-fetches the latest content whenever it's opened with a network
+     connection available (see sw.js for the network-first / cache-fallback strategy).
+     On hosts that only serve this single HTML file (no sibling sw.js reachable), the
+     registration simply fails silently below and the app runs exactly as before. -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){ /* no sw.js at this host — fine, app still works */ });
+  });
+}
+</script>
 <meta name="theme-color" content="#9C5B4A" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1E1613" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
